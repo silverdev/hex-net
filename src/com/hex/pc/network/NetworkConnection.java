@@ -4,13 +4,13 @@ import com.hex.core.Game;
 import com.hex.core.PlayerObject;
 import com.hex.network.Client;
 import com.hex.network.NetworkPlayer;
-import com.sam.hex.DialogBoxes;
 
 public class NetworkConnection {
-    public static Game netGame() {
+
+    public static Game netGame(Game game) {
         boolean host = DialogBoxes.amIHost();
         if(host) {
-            return hostGame();
+            return hostGame(game);
         }
         else return connectToGame();
     }
@@ -38,12 +38,13 @@ public class NetworkConnection {
         return netGame;
     }
 
-    private static Game hostGame() {
-        Host host = new Host("host");
+    private static Game hostGame(Game game) {
+        Host host = new Host("host", game);
         NetworkPlayer netPlayer = new NetworkPlayer(host, new NetworkCallbacks());
         String gameData = host.getGame();
 
         Game netGame = Game.load(gameData, new PlayerObject(1), netPlayer);
         return netGame;
     }
+
 }

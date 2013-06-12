@@ -3,16 +3,14 @@ package com.hex.pc.network;
 import com.hex.core.Game;
 import com.hex.network.Action;
 import com.hex.network.ServerResponse;
-import com.sam.hex.GameInfo;
-import com.sam.hex.Hexgame;
 
 public class Host extends PcClient {
 
-    public Host(String name) {
+    public Host(String name, Game game) {
         super(name);
         super.id = 2;
         super.talk = setUpServer();
-        String gameData = setUpGame().save();
+        String gameData = game.save();
         super.setGame(gameData);
         sendGame(gameData, name);
 
@@ -25,12 +23,6 @@ public class Host extends PcClient {
         String json = super.gson.toJson(sr);
         super.talk.sendMessage(json);
 
-    }
-
-    private Game setUpGame() {
-        GameInfo gameInfo = Hexgame.buildGame();
-        Game g = gameInfo.makeGame();
-        return g;
     }
 
     private Server setUpServer() {
