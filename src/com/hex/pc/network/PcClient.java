@@ -11,7 +11,7 @@ import com.hex.network.ServerResponse;
 public class PcClient extends Thread implements Client {
     public PcClient(String name) {
         this.name = name;
-        logger = new GameLogger(name);
+        logger = new GameLogger(name + ".log");
     }
 
     private String name;
