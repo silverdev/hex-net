@@ -6,7 +6,9 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public class Talker implements NetComunicaiton {
+import com.hex.network.NetCommunication;
+
+public class Talker implements NetCommunication {
     Socket requestSocket;
     ObjectOutputStream out;
     ObjectInputStream in;

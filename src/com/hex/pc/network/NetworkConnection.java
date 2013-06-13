@@ -7,16 +7,16 @@ import com.hex.network.NetworkPlayer;
 
 public class NetworkConnection {
 
-    public static Game netGame(Game game) {
-        boolean host = DialogBoxes.amIHost();
+    public static Game netGame(Game game,boolean host,String IP) {
+      
         if(host) {
             return hostGame(game);
         }
-        else return connectToGame();
+        else return connectToGame(IP);
     }
 
-    private static Game connectToGame() {
-        String IP = DialogBoxes.getIP();
+    private static Game connectToGame(String IP) {
+       
         Client com = new PcClient("guest", IP);
         NetworkPlayer netPlayer = new NetworkPlayer(com, new NetworkCallbacks());
         Game netGame;

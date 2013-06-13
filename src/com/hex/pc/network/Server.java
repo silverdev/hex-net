@@ -6,7 +6,9 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class Server implements NetComunicaiton {
+import com.hex.network.NetCommunication;
+
+public class Server implements NetCommunication {
 
     PcClient c;
     ServerSocket providerSocket;

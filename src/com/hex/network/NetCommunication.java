@@ -1,6 +1,6 @@
-package com.hex.pc.network;
+package com.hex.network;
 
-public interface NetComunicaiton {
+public interface NetCommunication {
 
     public abstract void sendMessage(String msg);
 

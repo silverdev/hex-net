@@ -1,4 +1,4 @@
-package com.hex.pc.network;
+package com.hex.android.net;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -9,30 +9,27 @@ import com.hex.network.Client;
 import com.hex.network.NetCommunication;
 import com.hex.network.ServerResponse;
 
-public class PcClient extends Thread implements Client {
-    public PcClient(String name) {
+public class AndroidClient extends Thread implements Client {
+    protected AndroidClient(String name) {
         this.name = name;
-        logger = new GameLogger(name + ".log");
     }
 
     private String name;
     protected NetCommunication talk;
     protected int id = 1;
-    private GameLogger logger;
     public Gson gson = new Gson();
     private String otherNane = "Not connected!";
     private String game = null;
     private final LinkedBlockingQueue<Move> moves = new LinkedBlockingQueue<Move>();
 
-    public PcClient(String n, String IP) {
+    public AndroidClient(String n, String IP) {
         System.out.println("Creating New TestClient: " + n);
         name = n;
-        talk = new Talker(this, IP);
-        logger = new GameLogger(name);
+       
     }
 
     public void messageDispach(String message) {
-        logger.log(message);
+      
         ServerResponse sr = gson.fromJson(message, ServerResponse.class);
         switch(sr.action) {
         case MOVE:
@@ -52,9 +49,7 @@ public class PcClient extends Thread implements Client {
 
     }
 
-    public void run() {
-        talk.run();
-    }
+    
 
     /*
      * (non-Javadoc)
@@ -95,7 +90,6 @@ public class PcClient extends Thread implements Client {
     public void sendMove(Move move) {
         ServerResponse sr = new ServerResponse(name, this.id, move, Action.MOVE, null);
         String json = gson.toJson(sr);
-        logger.log(json);
         this.talk.sendMessage(json);
 
     }
