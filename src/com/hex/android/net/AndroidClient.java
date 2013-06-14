@@ -9,10 +9,8 @@ import com.hex.network.Client;
 import com.hex.network.NetCommunication;
 import com.hex.network.ServerResponse;
 
-public class AndroidClient extends Thread implements Client {
-    protected AndroidClient(String name) {
-        this.name = name;
-    }
+public class AndroidClient implements Client {
+
 
     private String name;
     protected NetCommunication talk;
@@ -22,9 +20,10 @@ public class AndroidClient extends Thread implements Client {
     private String game = null;
     private final LinkedBlockingQueue<Move> moves = new LinkedBlockingQueue<Move>();
 
-    public AndroidClient(String n, String IP) {
-        System.out.println("Creating New TestClient: " + n);
+    public AndroidClient(String n, GameManager gameManager) {
+       
         name = n;
+        this.talk = gameManager;
        
     }
 
@@ -49,7 +48,6 @@ public class AndroidClient extends Thread implements Client {
 
     }
 
-    
 
     /*
      * (non-Javadoc)
@@ -117,5 +115,11 @@ public class AndroidClient extends Thread implements Client {
             this.notifyAll();
         }
     }
+
+	@Override
+	public void start() {
+		// TODO Auto-generated method stub
+		
+	}
 
 }
