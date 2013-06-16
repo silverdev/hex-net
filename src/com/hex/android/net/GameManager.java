@@ -1,6 +1,7 @@
 package com.hex.android.net;
 
 import java.util.ArrayList;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import android.app.Activity;
 
@@ -22,14 +23,15 @@ public class GameManager implements NetCommunication {
     private Gson gson = new Gson();
 	public String mRoomId;
 	public ArrayList<String> connectedPlayers;
-	public boolean host = false;
+	public LinkedBlockingQueue<Game> gameQueue;
+	boolean host;
 	
 	public GameManager(GameHelper mHelper, Activity main) {
 		this.mHelper = mHelper;
 		this.hexRoomUpdateListener = new HexRoomUpdateListener(main,this);
 		this.hexRoomStatusUpdateListener= new HexRoomStatusUpdateListener(this);
 		this.hexRealTimeMessageReceivedListener = new HexRealTimeMessageReceivedListener(this);
-
+		this.gameQueue = new LinkedBlockingQueue<Game>();
 		
 	}
 	
@@ -39,9 +41,14 @@ public class GameManager implements NetCommunication {
 	public void sendMessage(String msg) {
 		byte[] messageData = msg.getBytes();
 		for (String playerId : connectedPlayers){
+			System.out.print(playerId+" ");
+			
+		}
+		System.out.print("\n");
+		for (String playerId : connectedPlayers){
 		mHelper.getGamesClient().sendReliableRealTimeMessage(
 				null, messageData, mRoomId, playerId);
-		System.out.print("sent msg "+msg);
+		//System.out.println("sent msg "+msg);
 		}
 		
 	}
@@ -58,7 +65,7 @@ public class GameManager implements NetCommunication {
 		
 	}
 
-	public Game getGame() {
+	public void makeGame() {
 		System.out.println("the game is called");
 		if (this.host) {
 			this.client = new Host("host",this);
@@ -66,13 +73,26 @@ public class GameManager implements NetCommunication {
 		else {
 			this.client = new AndroidClient("client",this);
 		}
+		System.out.println("trying to get game "+host);
 		String gameState = syncGame(client);
-		System.out.print(gameState);
+		System.out.println(gameState);
 		Game g = gson.fromJson(gameState, Game.class);
 		System.out.println("the game is made "+g);
-		return g;
+		gameQueue.clear();
+		gameQueue.add(g);
+		
 	}
-
+   public Game getGame()
+   {
+	   System.out.print("feching");
+	   try {
+		return gameQueue.take();
+	} catch (InterruptedException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+		throw new RuntimeException("network error");
+	}
+   }
 	private String syncGame(AndroidClient com) { //might ifloop
 		String g;
 		synchronized(com) {
