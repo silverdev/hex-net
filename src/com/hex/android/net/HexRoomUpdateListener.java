@@ -48,6 +48,7 @@ public class HexRoomUpdateListener implements RoomUpdateListener {
     public void onRoomConnected(int status, Room room) {
         //set a list of all the players
     	gameManager.connectedPlayers = room.getParticipantIds();
+    	gameManager.makeGame(); 
 
     }
 
@@ -67,6 +68,7 @@ public class HexRoomUpdateListener implements RoomUpdateListener {
         Intent i = gameManager.mHelper.getGamesClient().getRealTimeWaitingRoomIntent(room, Integer.MAX_VALUE);
         mMainActivity.startActivityForResult(i, MainActivity.RC_WAITING_ROOM);
         System.out.print("game is started!");
+      
     }
 
 }
