@@ -11,10 +11,14 @@ tmp/**/*
 
 #ignore the binary
 bin/*
+gen/*
 
 #eclips stuff
 .project
 .classpath
+project.properties
+proguard-project.txt
+AndroidManifest.xml
  
 .~lock.designDoc.odt#
 
