@@ -3,6 +3,7 @@ package com.hex.pc.network;
 import com.hex.android.net.Host;
 import com.hex.core.Game;
 import com.hex.core.PlayerObject;
+import com.hex.network.NetworkCallbacks;
 import com.hex.network.NetworkPlayer;
 
 public class NetworkConnection {

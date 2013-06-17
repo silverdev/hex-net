@@ -8,7 +8,6 @@ import com.hex.core.MoveList;
 import com.hex.core.Player;
 import com.hex.core.PlayingEntity;
 import com.hex.core.TurnMismatchException;
-import com.hex.pc.network.NetworkCallbacks;
 
 public class NetworkPlayer implements PlayingEntity {
     private static final long serialVersionUID = 1L;
@@ -20,6 +19,8 @@ public class NetworkPlayer implements PlayingEntity {
     private NetworkCallbacks callbacks;
     private Client tc;
 
+    private NetworkCallbacks nc;
+
     public NetworkPlayer(int team, NetCommunication nc) {
         this.tc = new Client(nc);
         // this.tc.start();
@@ -29,8 +30,12 @@ public class NetworkPlayer implements PlayingEntity {
 
     }
 
-    public void receivedMessage(String msg) {
+    public void setCallbacks(NetworkCallbacks nc) {
+        this.nc = nc;
+    }
 
+    public void receivedMessage(String msg) {
+        this.tc.messageDispach(msg);
     }
 
     @Override
