@@ -1,4 +1,4 @@
-package com.hex.pc.network;
+package com.hex.network;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;

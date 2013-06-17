@@ -11,7 +11,6 @@ import com.hex.network.ServerResponse;
 
 public class AndroidClient implements Client {
 
-
     private String name;
     protected NetCommunication talk;
     protected int id = 1;
@@ -20,15 +19,15 @@ public class AndroidClient implements Client {
     private String game = null;
     private final LinkedBlockingQueue<Move> moves = new LinkedBlockingQueue<Move>();
 
-    public AndroidClient(String n, GameManager gameManager) {
-       
+    public AndroidClient() {
+
         name = n;
         this.talk = gameManager;
-       
+
     }
 
     public void messageDispach(String message) {
-      
+
         ServerResponse sr = gson.fromJson(message, ServerResponse.class);
         switch(sr.action) {
         case MOVE:
@@ -47,7 +46,6 @@ public class AndroidClient implements Client {
         }
 
     }
-
 
     /*
      * (non-Javadoc)
@@ -116,10 +114,10 @@ public class AndroidClient implements Client {
         }
     }
 
-	@Override
-	public void start() {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void start() {
+        // TODO Auto-generated method stub
+
+    }
 
 }

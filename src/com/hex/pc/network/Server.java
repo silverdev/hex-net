@@ -6,11 +6,12 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import com.hex.network.Client;
 import com.hex.network.NetCommunication;
 
-public class Server implements NetCommunication {
+public class Server extends Thread implements NetCommunication {
 
-    PcClient c;
+    Client c;
     ServerSocket providerSocket;
     Socket connection;
     ObjectOutputStream out;
@@ -25,8 +26,8 @@ public class Server implements NetCommunication {
      *            client to talk to
      * 
      */
-    public Server(PcClient c) {
-        this.c = c;
+    public Server() {
+
         alive = true;
         try {
             this.providerSocket = new ServerSocket(6969);

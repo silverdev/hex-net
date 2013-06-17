@@ -6,24 +6,26 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import com.hex.network.Client;
 import com.hex.network.NetCommunication;
 
-public class Talker implements NetCommunication {
+public class Talker extends Thread implements NetCommunication {
     Socket requestSocket;
     ObjectOutputStream out;
     ObjectInputStream in;
     String message;
 
-    PcClient master;
+    Client master;
     private String IP;
     private boolean alive;
 
-    public Talker(PcClient master, String IP) {
-        this.master = master;
+    public Talker(String IP) {
+        // this.master = master;
         this.IP = IP;
 
     }
 
+    @Override
     public void run() {
         this.alive = true;
         System.out.println("running");

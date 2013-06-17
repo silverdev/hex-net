@@ -21,13 +21,12 @@ public class NetworkPlayer implements PlayingEntity {
     private Client tc;
 
     public NetworkPlayer(int team, NetCommunication nc) {
-        // this.tc = tc;
+        this.tc = new Client(nc);
         // this.tc.start();
         this.team = team;
 
         System.out.println("the team is ____" + team);
 
-        this.callbacks = callbacks;
     }
 
     public void receivedMessage(String msg) {
