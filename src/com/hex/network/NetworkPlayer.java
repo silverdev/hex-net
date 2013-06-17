@@ -20,14 +20,18 @@ public class NetworkPlayer implements PlayingEntity {
     private NetworkCallbacks callbacks;
     private Client tc;
 
-    public NetworkPlayer(Client tc, NetworkCallbacks callbacks) {
-        this.tc = tc;
-        this.tc.start();
-        this.team = tc.getTeam();
+    public NetworkPlayer(int team, NetCommunication nc) {
+        // this.tc = tc;
+        // this.tc.start();
+        this.team = team;
 
         System.out.println("the team is ____" + team);
 
         this.callbacks = callbacks;
+    }
+
+    public void receivedMessage(String msg) {
+
     }
 
     @Override
