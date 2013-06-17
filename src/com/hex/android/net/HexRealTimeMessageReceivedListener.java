@@ -12,7 +12,8 @@ public class HexRealTimeMessageReceivedListener implements RealTimeMessageReceiv
 	}
 
 	@Override
-    public void onRealTimeMessageReceived(RealTimeMessage msg) {
+    public void onRealTimeMessageReceived(RealTimeMessage msg) { 
+		System.out.println("message Receved " +msg.isReliable());
 		if (msg.isReliable()){
         this.gameManager.receiveMessage(new String(msg.getMessageData()));
 		}

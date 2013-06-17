@@ -24,8 +24,7 @@ public class HexRoomUpdateListener implements RoomUpdateListener {
             // display error
             return;
         }
-        // If I joined then I am not the host
-        this.gameManager.host = false;
+        
 
         // tell the game gamager the room id
         mRoomId = room.getRoomId();
@@ -47,7 +46,13 @@ public class HexRoomUpdateListener implements RoomUpdateListener {
     public void onRoomConnected(int status, Room room) {
         // set a list of all the players
         gameManager.connectedPlayers = room.getParticipantIds();
+        gameManager.setPlayer(room);
+        System.out.println("room ID ==>"+room.getRoomId());
+        mRoomId = room.getRoomId();
+        this.gameManager.mRoomId = mRoomId;
+        
         gameManager.makeGame();
+       
 
     }
 
@@ -57,10 +62,7 @@ public class HexRoomUpdateListener implements RoomUpdateListener {
             // display error
             return;
         }
-        // If i made the room I am host
-        System.out.print("I am hosting");
-        this.gameManager.host = true;
-
+        System.out.println("room ID ==>"+room.getRoomId());
         mRoomId = room.getRoomId();
         this.gameManager.mRoomId = mRoomId;
         // get waiting room intent
