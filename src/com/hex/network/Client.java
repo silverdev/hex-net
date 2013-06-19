@@ -29,25 +29,40 @@ public class Client extends Thread {
         case APROVE:
             break;
         case NEW_GAME:
-            this.callbacks.newGame(sr.data);
+            if(this.callbacks != null) {
+                this.callbacks.newGame(sr.data);
+            }
             break;
         case OUT_OF_SYNC_ERROR:
-            this.callbacks.error();
+            if(this.callbacks != null) {
+                this.callbacks.error();
+            }
             break;
         case UNDO:
             break;
         case REQUEST_NEW_GAME:
-            String gameData = this.callbacks.newGameReqest();
-            if(gameData != null) {
-                this.sendNewGame(gameData);
-                this.callbacks.newGame(gameData);
+            if(this.callbacks != null) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String gameData = callbacks.newGameReqest();
+                        if(gameData != null) {
+                            sendNewGame(gameData);
+                            callbacks.newGame(gameData);
+                        }
+                    }
+                }).start();
             }
             break;
         case REQUEST_UNDO:
-            this.callbacks.undo(sr.number);
+            if(this.callbacks != null) {
+                this.callbacks.undo(sr.number);
+            }
             break;
         case SENDCHAT:
-            this.callbacks.chat(sr.data);
+            if(this.callbacks != null) {
+                this.callbacks.chat(sr.data);
+            }
             break;
         case STARTING:
             this.moves.clear();
