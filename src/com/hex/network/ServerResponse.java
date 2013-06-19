@@ -15,8 +15,9 @@ public class ServerResponse {
     public Move move;
     public Action action;
     public String data;
+    public int number;
 
-    public ServerResponse(String PlayerName, int PlayerID, Move move, Action action, String data) {
+    public ServerResponse(String playerName, int PlayerID, Move move, Action action, String data, int nuber) {
 
         this.playerID = playerID;
         this.playerName = playerName;
@@ -24,6 +25,10 @@ public class ServerResponse {
         this.move = move;
         this.action = action;
         this.data = data;
+        this.number = number;
     }
 
+    public ServerResponse(String playerName, int PlayerID, Move move, Action action, String data) {
+        this(playerName, PlayerID, move, action, data, 0);
+    }
 }

@@ -12,35 +12,30 @@ import com.hex.core.TurnMismatchException;
 public class NetworkPlayer implements PlayingEntity {
     private static final long serialVersionUID = 1L;
 
+    private static final Move EMPTYMOVE = new Move(-1, -1, (byte) -1, -1, -1);
+
     private int color;
     private long timeLeft;
     public final int team;
     private boolean skipMove = false;
-    private NetworkCallbacks callbacks;
-    private Client tc;
 
-    private NetworkCallbacks nc;
+    private Client tc;
 
     public NetworkPlayer(int team, NetCommunication nc) {
         this.tc = new Client(nc);
         // this.tc.start();
         this.team = team;
-
         System.out.println("the team is ____" + team);
 
     }
 
     public void setCallbacks(NetworkCallbacks nc) {
-        this.nc = nc;
+        this.tc.callbacks = nc;
+
     }
 
     public void receivedMessage(String msg) {
         this.tc.messageDispach(msg);
-    }
-
-    @Override
-    public void undoCalled() {
-        setSkipMove(true);
     }
 
     @Override
@@ -51,18 +46,20 @@ public class NetworkPlayer implements PlayingEntity {
 
     @Override
     public boolean supportsUndo(Game game) {
+
         return false;
     }
 
     @Override
     public boolean supportsNewgame() {
+        tc.requestNewGame();
         return false;
     }
 
     @Override
     public void quit() {
         endMove();
-        tc.kill();
+        // tc.kill();
     }
 
     @Override
@@ -72,7 +69,8 @@ public class NetworkPlayer implements PlayingEntity {
 
     @Override
     public void endMove() {
-        setSkipMove(true);
+        this.skipMove = true;
+        this.tc.simulateMove(EMPTYMOVE);
     }
 
     @Override
@@ -111,18 +109,10 @@ public class NetworkPlayer implements PlayingEntity {
         return tc.giveUp();
     }
 
-    public boolean getSkipMove() {
-        return skipMove;
-    }
-
-    private void setSkipMove(boolean skipMove) {
-        this.skipMove = skipMove;
-    }
-
     @Override
     // remote player is always player two
     public byte getTeam() {
-        return (byte) 2;
+        return (byte) this.team;
     }
 
     @Override
@@ -138,8 +128,17 @@ public class NetworkPlayer implements PlayingEntity {
             tc.sendMove(moveList.getMove());
         }
         // get the other players Move
-        Move move = tc.getPlayerTurn();
-        if(tc == null) return; // for quitting?
+        // if the move is empty skip it;
+        Move move = null;
+        do {
+            move = tc.getPlayerTurn();
+            if(this.skipMove) {
+                this.skipMove = false;
+                return;
+            }
+        }
+        while(move == this.EMPTYMOVE);
+
         if(move.getMoveNumber() != game.getMoveNumber()) {
             throw new TurnMismatchException("NetGame error");
         }
@@ -170,5 +169,22 @@ public class NetworkPlayer implements PlayingEntity {
     public void win() {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public void undoCalled() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void startGame() {
+        this.skipMove = false;
+        tc.starting();
+
+    }
+
+    public void exit() {
+        this.tc.kill();
     }
 }
