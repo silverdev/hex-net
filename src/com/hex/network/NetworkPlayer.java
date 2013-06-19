@@ -12,12 +12,14 @@ import com.hex.core.TurnMismatchException;
 public class NetworkPlayer implements PlayingEntity {
     private static final long serialVersionUID = 1L;
 
-    private static final Move EMPTYMOVE = new Move(-1, -1, (byte) -1, -1, -1);
+    private static final Move EMPTY_MOVE = new Move(-1, -1, (byte) -1, -1, -1);
 
     private int color;
     private long timeLeft;
-    public final int team;
+    private final int team;
     private boolean skipMove = false;
+    private String name;
+    private boolean forfeit;
 
     private Client tc;
 
@@ -26,12 +28,10 @@ public class NetworkPlayer implements PlayingEntity {
         // this.tc.start();
         this.team = team;
         System.out.println("the team is ____" + team);
-
     }
 
     public void setCallbacks(NetworkCallbacks nc) {
         this.tc.callbacks = nc;
-
     }
 
     public void receivedMessage(String msg) {
@@ -41,12 +41,10 @@ public class NetworkPlayer implements PlayingEntity {
     @Override
     public void newgameCalled() {
         endMove();
-
     }
 
     @Override
     public boolean supportsUndo(Game game) {
-
         return false;
     }
 
@@ -70,18 +68,17 @@ public class NetworkPlayer implements PlayingEntity {
     @Override
     public void endMove() {
         this.skipMove = true;
-        this.tc.simulateMove(EMPTYMOVE);
+        this.tc.simulateMove(EMPTY_MOVE);
     }
 
     @Override
-    // cant set the name of remote player
     public void setName(String name) {
-
+        this.name = name;
     }
 
     @Override
     public String getName() {
-        return tc.getPlayerName();
+        return name;
     }
 
     @Override
@@ -106,7 +103,7 @@ public class NetworkPlayer implements PlayingEntity {
 
     @Override
     public boolean giveUp() {
-        return tc.giveUp();
+        return forfeit;
     }
 
     @Override
@@ -137,7 +134,7 @@ public class NetworkPlayer implements PlayingEntity {
                 return;
             }
         }
-        while(move == this.EMPTYMOVE);
+        while(move == EMPTY_MOVE);
 
         if(move.getMoveNumber() != game.getMoveNumber()) {
             throw new TurnMismatchException("NetGame error");
@@ -148,7 +145,6 @@ public class NetworkPlayer implements PlayingEntity {
 
     @Override
     public Serializable getSaveState() {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -186,5 +182,9 @@ public class NetworkPlayer implements PlayingEntity {
 
     public void exit() {
         this.tc.kill();
+    }
+
+    public void forfeit() {
+        this.forfeit = true;
     }
 }

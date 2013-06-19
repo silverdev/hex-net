@@ -6,13 +6,11 @@ import com.google.gson.Gson;
 import com.hex.core.Move;
 
 public class Client extends Thread {
-
     private String name;
     protected NetCommunication talk;
     protected int id = 1;
 
     public Gson gson = new Gson();
-    private String otherNane = "Not connected!";
 
     private final LinkedBlockingQueue<Move> moves = new LinkedBlockingQueue<Move>();
     public NetworkCallbacks callbacks;
@@ -20,13 +18,9 @@ public class Client extends Thread {
     public Client(NetCommunication talk) {
         System.out.println("Creating New TestClient: ");
         this.talk = talk;
-
-        this.name = "net Player";
-
     }
 
     public void messageDispach(String message) {
-
         ServerResponse sr = gson.fromJson(message, ServerResponse.class);
         switch(sr.action) {
         case MOVE:
@@ -36,7 +30,6 @@ public class Client extends Thread {
             break;
         case NEW_GAME:
             this.callbacks.newGame(sr.data);
-            // this.moves.clear(); // ToMove
             break;
         case OUT_OF_SYNC_ERROR:
             this.callbacks.error();
@@ -46,14 +39,9 @@ public class Client extends Thread {
         case REQUEST_NEW_GAME:
             String gameData = this.callbacks.newGameReqest();
             if(gameData != null) {
-
                 this.sendNewGame(gameData);
                 this.callbacks.newGame(gameData);
-                // clear any old moves
-                // this.moves.clear(); // toMove
-
             }
-
             break;
         case REQUEST_UNDO:
             this.callbacks.undo(sr.number);
@@ -66,9 +54,7 @@ public class Client extends Thread {
             break;
         default:
             break;
-
         }
-
     }
 
     private void sendNewGame(String gameData) {
@@ -76,10 +62,6 @@ public class Client extends Thread {
         String json = gson.toJson(sr);
         this.talk.sendMessage(json);
 
-    }
-
-    public String getPlayerName() {
-        return this.otherNane;
     }
 
     public void kill() {
