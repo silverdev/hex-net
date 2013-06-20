@@ -35,7 +35,7 @@ public class Client extends Thread {
             break;
         case OUT_OF_SYNC_ERROR:
             if(this.callbacks != null) {
-                this.callbacks.error();
+                this.callbacks.error(Errors.TURNMISMATCHEXCEPTION);
             }
             break;
         case UNDO:
@@ -75,11 +75,27 @@ public class Client extends Thread {
             }
             break;
         case STARTING:
+
+            if(sr.number != 1) {
+                sendError(Errors.VERSION);
+                this.callbacks.error(Errors.VERSION);
+            }
             this.moves.clear();
+            break;
+        case ERROR:
+            this.callbacks.error(Errors.values()[sr.number]);
             break;
         default:
             break;
+
         }
+    }
+
+    private void sendError(Errors e) {
+        ServerResponse sr = new ServerResponse(name, this.id, null, Action.ERROR, null, e.ordinal());
+        String json = gson.toJson(sr);
+        talk.sendMessage(json);
+
     }
 
     private void sendUndo(int number) {

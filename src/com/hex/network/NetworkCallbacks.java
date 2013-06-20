@@ -36,7 +36,7 @@ public interface NetworkCallbacks {
     /**
      * this is called if the game encounters an error
      */
-    public void error();
+    public void error(Errors error);
 
     /**
      * @param message
