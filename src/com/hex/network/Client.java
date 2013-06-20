@@ -12,6 +12,8 @@ public class Client extends Thread {
 
     public Gson gson = new Gson();
 
+    public static final int VERSION = 1;
+
     private final LinkedBlockingQueue<Move> moves = new LinkedBlockingQueue<Move>();
     public NetworkCallbacks callbacks;
 
@@ -76,7 +78,7 @@ public class Client extends Thread {
             break;
         case STARTING:
 
-            if(sr.number != 1) {
+            if(sr.number != this.VERSION) {
                 sendError(Errors.VERSION);
                 this.callbacks.error(Errors.VERSION);
             }
@@ -162,7 +164,7 @@ public class Client extends Thread {
     }
 
     public void starting() {
-        ServerResponse sr = new ServerResponse(name, this.id, null, Action.STARTING, null);
+        ServerResponse sr = new ServerResponse(name, this.id, null, Action.STARTING, null, this.VERSION);
         String json = gson.toJson(sr);
         talk.sendMessage(json);
 
