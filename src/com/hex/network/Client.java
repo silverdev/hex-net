@@ -21,7 +21,7 @@ public class Client extends Thread {
     }
 
     public void messageDispach(String message) {
-        ServerResponse sr = gson.fromJson(message, ServerResponse.class);
+        final ServerResponse sr = gson.fromJson(message, ServerResponse.class);
         switch(sr.action) {
         case MOVE:
             moves.add(sr.move);
@@ -57,10 +57,15 @@ public class Client extends Thread {
             break;
         case REQUEST_UNDO:
             if(this.callbacks != null) {
-                if(this.callbacks.undoRequest(sr.number)) {
-                    this.sendUndo(sr.number);
-                    this.callbacks.undo(sr.number);
-                }
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(callbacks.undoRequest(sr.number)) {
+                            sendUndo(sr.number);
+                            callbacks.undo(sr.number);
+                        }
+                    }
+                }).start();
 
             }
             break;
