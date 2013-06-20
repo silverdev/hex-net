@@ -135,11 +135,17 @@ public class NetworkPlayer implements PlayingEntity {
                 this.skipMove = false;
                 return;
             }
+            // Ignore repeat move
+            if(move.getMoveNumber() < game.getMoveNumber()) {
+                move = EMPTY_MOVE;
+            }
         }
         while(move == EMPTY_MOVE);
 
-        if(false && move.getMoveNumber() != game.getMoveNumber()) {
-            throw new TurnMismatchException("NetGame error");
+        // make sure that this is the move I am listening for
+        if(move.getMoveNumber() != game.getMoveNumber()) {
+            throw new TurnMismatchException("NetGame error: \n the move nuber is: " + move.getMoveNumber() + " but the game move nuber: "
+                    + game.getMoveNumber());
         }
         game.getMoveList().makeMove(move);
         game.gamePieces[move.getX()][move.getY()].setTeam((byte) this.team, game);
