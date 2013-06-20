@@ -45,6 +45,8 @@ public class NetworkPlayer implements PlayingEntity {
 
     @Override
     public boolean supportsUndo(Game game) {
+        int thisTurn = game.getMoveNumber();
+        tc.requestUndo(thisTurn - 1);
         return false;
     }
 

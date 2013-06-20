@@ -39,6 +39,7 @@ public class Client extends Thread {
             }
             break;
         case UNDO:
+            this.callbacks.undo(sr.number);
             break;
         case REQUEST_NEW_GAME:
             if(this.callbacks != null) {
@@ -56,7 +57,11 @@ public class Client extends Thread {
             break;
         case REQUEST_UNDO:
             if(this.callbacks != null) {
-                this.callbacks.undo(sr.number);
+                if(this.callbacks.undoRequest(sr.number)) {
+                    this.sendUndo(sr.number);
+                    this.callbacks.undo(sr.number);
+                }
+
             }
             break;
         case SENDCHAT:
@@ -70,6 +75,12 @@ public class Client extends Thread {
         default:
             break;
         }
+    }
+
+    private void sendUndo(int number) {
+        ServerResponse sr = new ServerResponse(name, this.id, null, Action.UNDO, null, number);
+        String json = gson.toJson(sr);
+        talk.sendMessage(json);
     }
 
     private void sendNewGame(String gameData) {
@@ -131,6 +142,13 @@ public class Client extends Thread {
 
     public void starting() {
         ServerResponse sr = new ServerResponse(name, this.id, null, Action.STARTING, null);
+        String json = gson.toJson(sr);
+        talk.sendMessage(json);
+
+    }
+
+    public void requestUndo(int undoTo) {
+        ServerResponse sr = new ServerResponse(name, this.id, null, Action.REQUEST_UNDO, null, undoTo);
         String json = gson.toJson(sr);
         talk.sendMessage(json);
 
