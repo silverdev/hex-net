@@ -138,7 +138,7 @@ public class NetworkPlayer implements PlayingEntity {
         }
         while(move == EMPTY_MOVE);
 
-        if(move.getMoveNumber() != game.getMoveNumber()) {
+        if(false && move.getMoveNumber() != game.getMoveNumber()) {
             throw new TurnMismatchException("NetGame error");
         }
         game.getMoveList().makeMove(move);
