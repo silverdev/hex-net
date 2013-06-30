@@ -18,7 +18,7 @@ public interface NetworkCallbacks {
      *         This is the request for a new game Send a string with the data or
      *         null to keep the old game
      */
-    public String newGameReqest();
+    public String newGameRequest();
 
     /**
      * @param turnNumer

@@ -48,7 +48,7 @@ public class Client extends Thread {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        String gameData = callbacks.newGameReqest();
+                        String gameData = callbacks.newGameRequest();
                         if(gameData != null) {
                             sendNewGame(gameData);
                             callbacks.newGame(gameData);
