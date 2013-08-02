@@ -45,29 +45,22 @@ public class Client extends Thread {
             break;
         case REQUEST_NEW_GAME:
             if(this.callbacks != null) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        String gameData = callbacks.newGameRequest();
-                        if(gameData != null) {
-                            sendNewGame(gameData);
-                            callbacks.newGame(gameData);
-                        }
-                    }
-                }).start();
+
+                String gameData = callbacks.newGameRequest();
+                if(gameData != null) {
+                    sendNewGame(gameData);
+                    callbacks.newGame(gameData);
+                }
+
             }
             break;
         case REQUEST_UNDO:
             if(this.callbacks != null) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if(callbacks.undoRequest(sr.number)) {
-                            sendUndo(sr.number);
-                            callbacks.undo(sr.number);
-                        }
-                    }
-                }).start();
+
+                if(callbacks.undoRequest(sr.number)) {
+                    sendUndo(sr.number);
+                    callbacks.undo(sr.number);
+                }
 
             }
             break;
